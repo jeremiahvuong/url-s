@@ -3,7 +3,7 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-import { HelloResolver } from "./resolvers/link";
+import { LinkResolver } from "./resolvers/link";
 import cors from "cors";
 import { AppDataSource } from "./ormconfig";
 
@@ -24,7 +24,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [LinkResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({ req, res }),

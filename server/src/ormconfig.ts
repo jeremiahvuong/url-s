@@ -1,6 +1,7 @@
 import path from "path";
 import { DataSource } from "typeorm";
 import { __prod__ } from "./constants";
+import { Link } from "./entities/Link";
 
 // if .env file does not contain all variables located inside .env.example => server will crash
 import "dotenv-safe/config";
@@ -11,5 +12,5 @@ export const AppDataSource = new DataSource({
   logging: true,
   synchronize: __prod__ ? false : true,
   migrations: [path.join(__dirname, "./migrations/*")],
-  entities: [],
+  entities: [Link],
 });
