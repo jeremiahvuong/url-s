@@ -20,7 +20,7 @@ export class Link extends BaseEntity {
   link!: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   hash!: string;
 
   @Field(() => String)

@@ -27,7 +27,6 @@ const main = async () => {
       resolvers: [LinkResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ req, res }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
 
