@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Formik } from "formik";
-import styles from "../styles/Home.module.css";
 import { useShortenMutation } from "../generated/graphql";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { DOMAIN_NAME } from "../constants";
 
 const Home: NextPage = () => {
   const [{ data }, shortenLink] = useShortenMutation();
@@ -28,7 +28,14 @@ const Home: NextPage = () => {
           </form>
         )}
       </Formik>
-      <div>{data?.shorten.hash}</div>
+      <div>
+        {data && (
+          <>
+            <p>{data.shorten.link}</p>
+            <p>{DOMAIN_NAME + data.shorten.hash}</p>
+          </>
+        )}
+      </div>
     </>
   );
 };
