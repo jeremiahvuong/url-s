@@ -7,6 +7,10 @@ import crypto from "crypto";
 export class LinkResolver {
   @Mutation(() => Link)
   async shorten(@Arg("link") link: string) {
+    if (!link.includes("http://" || "https://")) {
+      link = `http://${link}`;
+    }
+
     const exist = await Link.findOne({ where: { link } });
 
     if (exist) {
