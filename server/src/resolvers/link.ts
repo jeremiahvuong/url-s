@@ -7,6 +7,12 @@ var crypto = require("crypto");
 export class LinkResolver {
   @Mutation(() => Link)
   async shorten(@Arg("link") link: string) {
+    const exist = await Link.findOne({ where: { link } });
+
+    if (exist) {
+      return exist;
+    }
+
     const hash = crypto.randomBytes(2).toString("hex");
     const result = await AppDataSource.createQueryBuilder()
       .insert()

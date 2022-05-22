@@ -16,7 +16,7 @@ export class Link extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   link!: string;
 
   @Field()
