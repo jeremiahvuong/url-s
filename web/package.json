@@ -9,6 +9,7 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "formik": "^2.2.9",
     "graphql": "^16.5.0",
     "next": "12.1.6",
     "next-urql": "^3.3.2",
