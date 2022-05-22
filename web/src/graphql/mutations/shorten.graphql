@@ -1,0 +1,9 @@
+mutation Shorten($link: String!) {
+  shorten(link: $link) {
+    id
+    link
+    hash
+    createdAt
+    updatedAt
+  }
+}

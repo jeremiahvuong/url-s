@@ -1,0 +1,9 @@
+query Link($hash: String!) {
+  link(hash: $hash) {
+    id
+    link
+    hash
+    createdAt
+    updatedAt
+  }
+}
