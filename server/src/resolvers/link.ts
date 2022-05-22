@@ -1,7 +1,7 @@
 import { AppDataSource } from "../ormconfig";
 import { Resolver, Query, Mutation, Arg } from "type-graphql";
 import { Link } from "../entities/Link";
-var crypto = require("crypto");
+import crypto from "crypto";
 
 @Resolver()
 export class LinkResolver {
