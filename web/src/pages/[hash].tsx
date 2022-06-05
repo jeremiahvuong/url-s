@@ -3,6 +3,7 @@ import { withUrqlClient } from "next-urql";
 import { useLinkQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import router from "next/router";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -25,7 +26,13 @@ const Hash: NextPage<Props> = ({ input }) => {
     router.replace(data?.link.link);
   }
 
-  return <></>;
+  return (
+    <>
+      <Head>
+        <title>Redirecting...</title>
+      </Head>
+    </>
+  );
 };
 
 export default withUrqlClient(createUrqlClient)(Hash);
