@@ -15,6 +15,10 @@ export class LinkResolver {
       link = `http://${link}`;
     }
 
+    if (!link.endsWith("/")) {
+      link = `${link}/`;
+    }
+
     const exist = await Link.findOne({ where: { link } });
 
     if (exist) {
