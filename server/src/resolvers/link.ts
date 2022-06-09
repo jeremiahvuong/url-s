@@ -19,13 +19,14 @@ export class LinkResolver {
       link = `${link}/`;
     }
 
-    const exist = await Link.findOne({ where: { link } });
+    const linkExists = await Link.findOne({ where: { link } });
 
-    if (exist) {
-      return exist;
+    if (linkExists) {
+      return linkExists;
     }
 
     const hash = crypto.randomBytes(2).toString("hex");
+
     const result = await AppDataSource.createQueryBuilder()
       .insert()
       .into(Link)
