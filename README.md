@@ -1,5 +1,23 @@
 # urldabra
 
+### Developing
+
+To dev server (in two different terminals simultaneously):
+
+```
+yarn watch
+```
+
+```
+yarn dev
+```
+
+To dev web:
+
+```
+yarn dev
+```
+
 ### Configuring
 
 Create a `.env` file in [server](https://github.com/jeremiahvuong/url-s/tree/main/server) directory
