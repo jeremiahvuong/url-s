@@ -1,5 +1,7 @@
 # urldabra
 
+![Demo GIF](https://github.com/jeremiahvuong/urldabra/blob/main/demo.gif)
+
 ### Developing
 
 To dev server (in two different terminals simultaneously):

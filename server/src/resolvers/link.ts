@@ -7,10 +7,12 @@ import crypto from "crypto";
 export class LinkResolver {
   @Mutation(() => Link)
   async shorten(@Arg("link") link: string) {
+    // replace https to http
     if (link.includes("https://") && !link.includes("http://")) {
       link = link.replace("https://", "http://");
     }
 
+    // require http://
     if (!link.includes("http://" || "https://")) {
       link = `http://${link}`;
     }
