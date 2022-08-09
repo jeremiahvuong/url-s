@@ -1,32 +1,35 @@
-import { Field, ObjectType } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
 import {
   Entity,
-  BaseEntity,
-  Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
+  Column,
+  BaseEntity,
+  OneToMany,
 } from "typeorm";
-import { User } from "./User";
+import { Link } from "./Link";
 
 @ObjectType()
 @Entity()
-export class Link extends BaseEntity {
+export class User extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Field()
   @Column({ unique: true })
-  link!: string;
+  username!: string;
 
   @Field()
   @Column({ unique: true })
-  hash!: string;
+  email!: string;
 
-  @ManyToOne(() => User, (user) => user.links)
-  creator!: User;
+  @Column()
+  password!: string;
+
+  @OneToMany(() => Link, (link) => link.creator)
+  links: Link[];
 
   @Field(() => String)
   @CreateDateColumn()

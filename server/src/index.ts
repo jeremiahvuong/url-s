@@ -6,12 +6,19 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
 import { LinkResolver } from "./resolvers/link";
 import cors from "cors";
 import { AppDataSource } from "./ormconfig";
+import { UserResolver } from "./resolvers/user";
+import { COOKIE_NAME, DOMAIN_NAME, __prod__ } from "./constants";
+import session from "express-session";
+import Redis from "ioredis";
+import connectRedis from "connect-redis";
 
 // if .env file does not contain all variables located inside .env.example => server will crash
 import "dotenv-safe/config";
 
 const main = async () => {
   const app = express();
+  const redis = new Redis();
+  const RedisStore = connectRedis(session);
 
   app.set("proxy", 1);
 
@@ -22,11 +29,32 @@ const main = async () => {
     })
   );
 
+  app.use(
+    session({
+      name: COOKIE_NAME,
+      store: new RedisStore({
+        client: redis,
+        disableTouch: true,
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 2, // 2 years
+        httpOnly: true,
+        sameSite: "lax", // csrf
+        secure: __prod__, // cookie only works in https
+        domain: __prod__ ? `.${DOMAIN_NAME}}` : undefined,
+      },
+      saveUninitialized: false,
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+    })
+  );
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [LinkResolver],
+      resolvers: [LinkResolver, UserResolver],
       validate: false,
     }),
+    context: ({ req, res }) => ({ req, res, redis }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
 
