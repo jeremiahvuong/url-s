@@ -1,12 +1,22 @@
 import { AppDataSource } from "../ormconfig";
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  UseMiddleware,
+  Ctx,
+} from "type-graphql";
 import { Link } from "../entities/Link";
 import crypto from "crypto";
+import { isAuthenticated } from "../middleware/isAuthenticated";
+import { MyContext } from "../types";
 
 @Resolver()
 export class LinkResolver {
+  @UseMiddleware(isAuthenticated)
   @Mutation(() => Link)
-  async shorten(@Arg("link") link: string) {
+  async shorten(@Arg("link") link: string, @Ctx() { req }: MyContext) {
     // replace https to http
     if (link.includes("https://") && !link.includes("http://")) {
       link = link.replace("https://", "http://");
@@ -21,12 +31,6 @@ export class LinkResolver {
       link = `${link}/`;
     }
 
-    const linkExists = await Link.findOne({ where: { link } });
-
-    if (linkExists) {
-      return linkExists;
-    }
-
     const hash = crypto.randomBytes(2).toString("hex");
 
     const result = await AppDataSource.createQueryBuilder()
@@ -35,6 +39,7 @@ export class LinkResolver {
       .values({
         link,
         hash,
+        creatorId: req.session.userId,
       })
       .returning("*")
       .execute();

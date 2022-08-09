@@ -18,7 +18,7 @@ export class Link extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column({ unique: true })
+  @Column()
   link!: string;
 
   @Field()
@@ -27,6 +27,10 @@ export class Link extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.links)
   creator!: User;
+
+  @Field()
+  @Column()
+  creatorId!: number;
 
   @Field(() => String)
   @CreateDateColumn()
