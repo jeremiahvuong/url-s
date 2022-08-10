@@ -31,7 +31,7 @@ export class LinkResolver {
       link = `${link}/`;
     }
 
-    const hash = crypto.randomBytes(2).toString("hex");
+    const hash = crypto.randomBytes(3).toString("hex");
 
     const result = await AppDataSource.createQueryBuilder()
       .insert()
@@ -47,8 +47,36 @@ export class LinkResolver {
     return result.raw[0];
   }
 
-  @Query(() => Link)
+  @UseMiddleware(isAuthenticated)
+  @Mutation(() => Boolean)
+  async delete(@Arg("hash") hash: string, @Ctx() { req }: MyContext) {
+    const link = await Link.findOne({ where: { hash } });
+
+    if (!link) {
+      return false;
+    }
+
+    // If user is not author
+    if (link.creatorId !== req.session.userId) {
+      throw new Error("not authorized");
+    }
+
+    await Link.delete({ hash, creatorId: req.session.userId });
+    return true;
+  }
+
+  @Query(() => Link, { nullable: true })
   link(@Arg("hash") hash: string) {
     return Link.findOne({ where: { hash } });
+  }
+
+  @UseMiddleware(isAuthenticated)
+  @Query(() => [Link], { nullable: true })
+  async myLinks(@Ctx() { req }: MyContext) {
+    return AppDataSource.getRepository(Link)
+      .createQueryBuilder()
+      .where({ creatorId: req.session.userId })
+      .orderBy('"updatedAt"')
+      .getMany();
   }
 }

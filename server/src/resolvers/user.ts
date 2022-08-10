@@ -89,16 +89,6 @@ export class UserResolver {
     // keep them logged in
     req.session.userId = user.id;
 
-    // await AppDataSource.createQueryBuilder()
-    //   .insert()
-    //   .into(Profile)
-    //   .values({
-    //     username: options.username.toLowerCase(),
-    //     id: req.session.userId,
-    //   })
-    //   .returning("*")
-    //   .execute();
-
     return { user };
   }
 

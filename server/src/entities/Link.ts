@@ -26,11 +26,11 @@ export class Link extends BaseEntity {
   hash!: string;
 
   @ManyToOne(() => User, (user) => user.links)
-  creator!: User;
+  creator: User;
 
   @Field()
   @Column()
-  creatorId!: number;
+  creatorId: number;
 
   @Field(() => String)
   @CreateDateColumn()
