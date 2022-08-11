@@ -7,6 +7,7 @@ import { DOMAIN_NAME } from "../constants";
 import { ShortenMutation, useShortenMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import styles from "../styles/Home.module.css";
+import NextLink from "next/link";
 
 const Home: NextPage = () => {
   const [{ data }, shortenLink] = useShortenMutation();
@@ -27,13 +28,21 @@ const Home: NextPage = () => {
   }, [addLink, data]);
 
   return (
-    <div className={styles.main}>
+    <>
       <Head>
         <title>urldabra</title>
         <meta name="description" content="A URL shortening web-app." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={styles.content}>
+      <div className={styles.header}>
+        <NextLink href="/login">
+          <button className={styles.button}>Login</button>
+        </NextLink>
+        <NextLink href="register">
+          <button className={styles.button}>Register</button>
+        </NextLink>
+      </div>
+      <div className={styles.main}>
         <div className={styles.box}>
           <h1 className={styles.urldabra}>urldabra</h1>
           <p className={styles.love}>
@@ -82,7 +91,7 @@ const Home: NextPage = () => {
           © 2022 jeremiah vuong
         </a>
       </div>
-    </div>
+    </>
   );
 };
 
