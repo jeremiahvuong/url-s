@@ -1130,12 +1130,28 @@
     "@typescript-eslint/types" "5.25.0"
     eslint-visitor-keys "^3.3.0"
 
+"@urql/core@>=2.5.0":
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.6.1.tgz#c10ee972c5e81df6d7bf1e778ef1b5d30e2906e5"
+  integrity sha512-gYrEHy3tViJhwIhauK6MIf2Qp09QTsgNHZRd0n71rS+hF6gdwjspf1oKljl4m25+272cJF7fPjBUGmjaiEr7Kg==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    wonka "^4.0.14"
+
 "@urql/core@^2.4.3":
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-2.4.4.tgz#29f1d03cc439134259761e70a78ae20302c3d7fe"
   integrity sha512-TD+OS7jG1Ts6QkpU0TZ85i/vu40r71GF0QQFDhnWFtgkHcNwnpkIwWBMa72AR3j2imBTPpk61e/xb39uM/t37A==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
+    wonka "^4.0.14"
+
+"@urql/exchange-graphcache@^4.4.3":
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-graphcache/-/exchange-graphcache-4.4.3.tgz#3c8295a16c730918e1d01de42a2f180a777b98ca"
+  integrity sha512-EPXRCzq929RjVDym4NP4mO6bsyGE6J1JzUxE9vpm04VjZtK90Ag4bgftFdkHsMHh4ydvokLKQjCRVqGxKEBnEg==
+  dependencies:
+    "@urql/core" ">=2.5.0"
     wonka "^4.0.14"
 
 abort-controller@^3.0.0:
@@ -1482,9 +1498,9 @@ camelcase@^5.0.0:
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
 caniuse-lite@^1.0.30001332:
-  version "1.0.30001341"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001341.tgz#59590c8ffa8b5939cf4161f00827b8873ad72498"
-  integrity sha512-2SodVrFFtvGENGCv0ChVJIDQ0KPaS1cg7/qtfMaICgeMolDdo/Z2OD32F0Aq9yl6F4YFwGPBS5AaPqNYiW4PoA==
+  version "1.0.30001375"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001375.tgz#8e73bc3d1a4c800beb39f3163bf0190d7e5d7672"
+  integrity sha512-kWIMkNzLYxSvnjy0hL8w1NOaWNr2rn39RTAVyIwcw8juu60bZDWiF1/loOYANzjtJmy6qPgNmn38ro5Pygagdw==
 
 capital-case@^1.0.4:
   version "1.0.4"

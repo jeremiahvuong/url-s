@@ -7,9 +7,10 @@ import { DOMAIN_NAME } from "../constants";
 import { ShortenMutation, useShortenMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import styles from "../styles/Home.module.css";
-import NextLink from "next/link";
+import dynamic from "next/dynamic";
+const NavBar = dynamic(() => import("../components/navbar"), { ssr: false });
 
-const Home: NextPage = () => {
+const Index: NextPage = () => {
   const [{ data }, shortenLink] = useShortenMutation();
   const [links, setLinks] = useState<ShortenMutation[]>([]);
 
@@ -34,14 +35,7 @@ const Home: NextPage = () => {
         <meta name="description" content="A URL shortening web-app." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={styles.header}>
-        <NextLink href="/login">
-          <button className={styles.button}>Login</button>
-        </NextLink>
-        <NextLink href="register">
-          <button className={styles.button}>Register</button>
-        </NextLink>
-      </div>
+      <NavBar />
       <div className={styles.main}>
         <div className={styles.box}>
           <h1 className={styles.urldabra}>urldabra</h1>
@@ -95,4 +89,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Index);

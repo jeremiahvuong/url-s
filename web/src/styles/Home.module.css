@@ -1,7 +1,7 @@
 .header {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
   margin: 2em;
 }
 
@@ -116,4 +116,8 @@
 
 .button:active {
   box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
+}
+
+.username {
+  margin-right: 2em;
 }

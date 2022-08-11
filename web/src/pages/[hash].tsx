@@ -23,7 +23,7 @@ const Hash: NextPage<Props> = ({ input }) => {
   }
 
   if (data) {
-    router.replace(data?.link.link);
+    router.replace(data?.link!.link);
   }
 
   return (
