@@ -1,7 +1,8 @@
-import { cacheExchange, Cache } from "@urql/exchange-graphcache";
+import { cacheExchange } from "@urql/exchange-graphcache";
+import Router from "next/router";
 import { dedupExchange, Exchange, fetchExchange } from "urql";
+import { pipe, tap } from "wonka";
 import {
-  DeleteMutation,
   DeleteMutationVariables,
   LoginMutation,
   LogoutMutation,
@@ -11,12 +12,8 @@ import {
   MyLinksQuery,
   RegisterMutation,
   ShortenMutation,
-  ShortenMutationVariables,
-  useMyLinksQuery,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
-import { pipe, tap } from "wonka";
-import Router from "next/router";
 
 const errorExchange: Exchange =
   ({ forward }) =>
@@ -48,6 +45,9 @@ export const createUrqlClient = (ssrExchange: any) => ({
               _result,
               () => ({ me: null })
             );
+
+            // re-route to homepage
+            Router.replace("/");
           },
           login: (_result, args, cache, info) => {
             betterUpdateQuery<LoginMutation, MeQuery>(

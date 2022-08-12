@@ -35,4 +35,4 @@ const Hash: NextPage<Props> = ({ input }) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Hash);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Hash);
