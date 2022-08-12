@@ -1,11 +1,18 @@
-import { cacheExchange } from "@urql/exchange-graphcache";
+import { cacheExchange, Cache } from "@urql/exchange-graphcache";
 import { dedupExchange, Exchange, fetchExchange } from "urql";
 import {
+  DeleteMutation,
+  DeleteMutationVariables,
   LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
+  MyLinksDocument,
+  MyLinksQuery,
   RegisterMutation,
+  ShortenMutation,
+  ShortenMutationVariables,
+  useMyLinksQuery,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { pipe, tap } from "wonka";
@@ -71,6 +78,23 @@ export const createUrqlClient = (ssrExchange: any) => ({
                     me: result.register.user,
                   };
                 }
+              }
+            );
+          },
+          delete: (_result, args, cache, info) => {
+            cache.invalidate({
+              __typename: "Link",
+              id: (args as DeleteMutationVariables).id,
+            });
+          },
+          shorten: (_result, args, cache, info) => {
+            betterUpdateQuery<ShortenMutation, MyLinksQuery>(
+              cache,
+              { query: MyLinksDocument },
+              _result,
+              (result, query) => {
+                query?.myLinks?.push(result.shorten);
+                return query;
               }
             );
           },

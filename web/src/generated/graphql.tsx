@@ -42,7 +42,7 @@ export type Mutation = {
 
 
 export type MutationDeleteArgs = {
-  hash: Scalars['String'];
+  id: Scalars['Float'];
 };
 
 
@@ -96,9 +96,18 @@ export type UsernamePasswordInput = {
 
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
+export type RegularLinkFragment = { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string };
+
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string };
 
 export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', id: number, username: string } | null };
+
+export type DeleteMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteMutation = { __typename?: 'Mutation', delete: boolean };
 
 export type LoginMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
@@ -125,20 +134,35 @@ export type ShortenMutationVariables = Exact<{
 }>;
 
 
-export type ShortenMutation = { __typename?: 'Mutation', shorten: { __typename?: 'Link', id: number, link: string, hash: string, createdAt: string, updatedAt: string } };
+export type ShortenMutation = { __typename?: 'Mutation', shorten: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } };
 
 export type LinkQueryVariables = Exact<{
   hash: Scalars['String'];
 }>;
 
 
-export type LinkQuery = { __typename?: 'Query', link?: { __typename?: 'Link', id: number, link: string, hash: string, createdAt: string, updatedAt: string } | null };
+export type LinkQuery = { __typename?: 'Query', link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string } | null };
 
+export type MyLinksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyLinksQuery = { __typename?: 'Query', myLinks?: Array<{ __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string }> | null };
+
+export const RegularLinkFragmentDoc = gql`
+    fragment RegularLink on Link {
+  id
+  link
+  hash
+  creatorId
+  createdAt
+  updatedAt
+}
+    `;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -162,6 +186,15 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const DeleteDocument = gql`
+    mutation Delete($id: Float!) {
+  delete(id: $id)
+}
+    `;
+
+export function useDeleteMutation() {
+  return Urql.useMutation<DeleteMutation, DeleteMutationVariables>(DeleteDocument);
+};
 export const LoginDocument = gql`
     mutation Login($usernameOrEmail: String!, $password: String!) {
   login(usernameOrEmail: $usernameOrEmail, password: $password) {
@@ -196,14 +229,10 @@ export function useRegisterMutation() {
 export const ShortenDocument = gql`
     mutation Shorten($link: String!) {
   shorten(link: $link) {
-    id
-    link
-    hash
-    createdAt
-    updatedAt
+    ...RegularLink
   }
 }
-    `;
+    ${RegularLinkFragmentDoc}`;
 
 export function useShortenMutation() {
   return Urql.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument);
@@ -211,14 +240,10 @@ export function useShortenMutation() {
 export const LinkDocument = gql`
     query Link($hash: String!) {
   link(hash: $hash) {
-    id
-    link
-    hash
-    createdAt
-    updatedAt
+    ...RegularLink
   }
 }
-    `;
+    ${RegularLinkFragmentDoc}`;
 
 export function useLinkQuery(options: Omit<Urql.UseQueryArgs<LinkQueryVariables>, 'query'>) {
   return Urql.useQuery<LinkQuery>({ query: LinkDocument, ...options });
@@ -233,4 +258,15 @@ export const MeDocument = gql`
 
 export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const MyLinksDocument = gql`
+    query myLinks {
+  myLinks {
+    ...RegularLink
+  }
+}
+    ${RegularLinkFragmentDoc}`;
+
+export function useMyLinksQuery(options?: Omit<Urql.UseQueryArgs<MyLinksQueryVariables>, 'query'>) {
+  return Urql.useQuery<MyLinksQuery>({ query: MyLinksDocument, ...options });
 };

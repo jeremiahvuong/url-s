@@ -1,7 +1,7 @@
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
+import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
-import styles from "../styles/Home.module.css";
 
 interface NavBarProps {}
 
@@ -21,32 +21,41 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     userState = (
       <>
         <NextLink href="/login">
-          <button className={styles.button}>Login</button>
+          <Button mr={2}>Login</Button>
         </NextLink>
         <NextLink href="register">
-          <button className={styles.button}>Register</button>
+          <Button>Register</Button>
         </NextLink>
       </>
     );
   } else {
     // user is logged in
     userState = (
-      <>
-        <p className={styles.username}>{meData.me.username}</p>
-        <button
-          className={styles.button}
+      <Flex>
+        <NextLink href="/manage">
+          <Link mr={2}>{meData.me.username}</Link>
+        </NextLink>
+        <Button
           onClick={() => {
             logout();
           }}
-          disabled={logoutFetching}
+          isLoading={logoutFetching}
+          variant="link"
         >
           Logout
-        </button>
-      </>
+        </Button>
+      </Flex>
     );
   }
 
-  return <div className={styles.header}>{userState}</div>;
+  return (
+    <Flex zIndex={1} position="sticky" top={0} bg="lightgray" p={4}>
+      <NextLink href="/">
+        <Link>urldabra</Link>
+      </NextLink>
+      <Box ml={"auto"}>{userState}</Box>
+    </Flex>
+  );
 };
 
 export default NavBar;

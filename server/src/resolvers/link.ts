@@ -49,8 +49,8 @@ export class LinkResolver {
 
   @UseMiddleware(isAuthenticated)
   @Mutation(() => Boolean)
-  async delete(@Arg("hash") hash: string, @Ctx() { req }: MyContext) {
-    const link = await Link.findOne({ where: { hash } });
+  async delete(@Arg("id") id: number, @Ctx() { req }: MyContext) {
+    const link = await Link.findOne({ where: { id } });
 
     if (!link) {
       return false;
@@ -61,7 +61,7 @@ export class LinkResolver {
       throw new Error("not authorized");
     }
 
-    await Link.delete({ hash, creatorId: req.session.userId });
+    await Link.delete({ id, creatorId: req.session.userId });
     return true;
   }
 

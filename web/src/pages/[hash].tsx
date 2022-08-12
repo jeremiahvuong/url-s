@@ -18,12 +18,12 @@ interface Props {
 const Hash: NextPage<Props> = ({ input }) => {
   const [{ data, fetching }] = useLinkQuery({ variables: { hash: input } });
 
-  if (!data && !fetching) {
+  if (!data?.link && !fetching) {
     router.replace("/");
   }
 
-  if (data) {
-    router.replace(data?.link!.link);
+  if (data?.link) {
+    router.replace(data.link.link);
   }
 
   return (

@@ -9,8 +9,12 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.2.6",
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
     "@urql/exchange-graphcache": "^4.4.3",
     "formik": "^2.2.9",
+    "framer-motion": "^7.1.0",
     "graphql": "^16.5.0",
     "next": "12.1.6",
     "next-urql": "^3.3.2",
