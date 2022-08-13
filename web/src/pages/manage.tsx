@@ -35,10 +35,11 @@ const Manage: NextPage = () => {
             ?.slice(0)
             .reverse()
             .map((p) => (
-              <Flex key={p.id}>
+              <Flex p={2} key={p.id}>
                 <Link href={p.link}>{p.link}</Link>
                 <Spacer />
                 <Link href={DOMAIN_NAME + p.hash}>{DOMAIN_NAME + p.hash}</Link>
+                <Button ml={2}>✏️</Button>
                 <Button
                   ml={2}
                   onClick={() => {
