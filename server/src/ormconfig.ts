@@ -5,6 +5,7 @@ import { Link } from "./entities/Link";
 
 // if .env file does not contain all variables located inside .env.example => server will crash
 import "dotenv-safe/config";
+import { User } from "./entities/User";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,5 +13,5 @@ export const AppDataSource = new DataSource({
   logging: true,
   synchronize: __prod__ ? false : true,
   migrations: [path.join(__dirname, "./migrations/*")],
-  entities: [Link],
+  entities: [Link, User],
 });

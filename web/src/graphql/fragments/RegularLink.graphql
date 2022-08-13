@@ -1,0 +1,8 @@
+fragment RegularLink on Link {
+  id
+  link
+  hash
+  creatorId
+  createdAt
+  updatedAt
+}

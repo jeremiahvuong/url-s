@@ -1,4 +1,4 @@
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import type { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
@@ -6,9 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { DOMAIN_NAME } from "../constants";
 import { ShortenMutation, useShortenMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import styles from "../styles/Home.module.css";
+import { Layout } from "../components/Layout";
+import { Box, Flex, Link, Spacer } from "@chakra-ui/react";
+import InputField from "../components/InputField";
 
-const Home: NextPage = () => {
+const Index: NextPage = () => {
   const [{ data }, shortenLink] = useShortenMutation();
   const [links, setLinks] = useState<ShortenMutation[]>([]);
 
@@ -27,19 +29,22 @@ const Home: NextPage = () => {
   }, [addLink, data]);
 
   return (
-    <div className={styles.main}>
+    <>
       <Head>
         <title>urldabra</title>
         <meta name="description" content="A URL shortening web-app." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={styles.content}>
-        <div className={styles.box}>
-          <h1 className={styles.urldabra}>urldabra</h1>
-          <p className={styles.love}>
-            Made with ❤️ by{" "}
-            <a href="https://github.com/jeremiahvuong">jeremiah</a>
-          </p>
+      <Layout>
+        <Box mt={40}>
+          <Box>
+            <p>
+              Made with ❤️ by{" "}
+              <Link color="blue" href="https://github.com/jeremiahvuong">
+                jeremiah
+              </Link>
+            </p>
+          </Box>
           <Formik
             initialValues={{ link: "" }}
             onSubmit={async (val) => {
@@ -47,43 +52,32 @@ const Home: NextPage = () => {
             }}
           >
             {({ handleSubmit, handleChange }) => (
-              <form className={styles.form} onSubmit={handleSubmit}>
-                <input
-                  className={styles.input}
-                  name="link"
-                  onChange={handleChange}
-                />
-              </form>
+              <Form onSubmit={handleSubmit}>
+                <InputField name="link" onChange={handleChange} label={""} />
+              </Form>
             )}
           </Formik>
-        </div>
-        <div className={styles.results}>
-          {links.map(
-            (data) =>
-              data && (
-                <p className={styles.links}>
-                  <a>{data?.shorten.link}</a>
-                  <a
-                    className={styles.hash}
-                    href={DOMAIN_NAME + data?.shorten.hash}
-                  >
-                    {DOMAIN_NAME + data?.shorten.hash}
-                  </a>
-                </p>
-              )
-          )}
-        </div>
-      </div>
-      <div className={styles.footer}>
-        <a
-          className={styles.copyright}
-          href="https://github.com/jeremiahvuong/urldabra"
-        >
-          © 2022 jeremiah vuong
-        </a>
-      </div>
-    </div>
+          <Box>
+            {links.map(
+              (data) =>
+                data && (
+                  <Flex>
+                    <Link href={data?.shorten.link}>{data?.shorten.link}</Link>
+                    <Spacer />
+                    <Link
+                      color={"blue"}
+                      href={DOMAIN_NAME + data?.shorten.hash}
+                    >
+                      {DOMAIN_NAME + data?.shorten.hash}
+                    </Link>
+                  </Flex>
+                )
+            )}
+          </Box>
+        </Box>
+      </Layout>
+    </>
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
