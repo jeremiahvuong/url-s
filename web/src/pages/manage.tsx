@@ -2,7 +2,7 @@ import { Button, Flex, Link, Spacer, useDisclosure } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
-import EditModal from "../components/editModal";
+import EditModal from "../components/EditModal";
 import { Layout } from "../components/Layout";
 import { DOMAIN_NAME } from "../constants";
 import { useDeleteMutation, useMyLinksQuery } from "../generated/graphql";

@@ -1,0 +1,5 @@
+query LinkByHash($hash: String!) {
+  linkByHash(hash: $hash) {
+    ...RegularLink
+  }
+}

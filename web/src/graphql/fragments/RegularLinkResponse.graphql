@@ -1,0 +1,8 @@
+fragment RegularLinkResponse on LinkResponse {
+  errors {
+    ...RegularError
+  }
+  link {
+    ...RegularLink
+  }
+}
