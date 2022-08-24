@@ -13,7 +13,6 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   let userState = null;
 
-  // data loading
   if (fetching) {
     // wait for fetch
   } else if (!meData?.me) {

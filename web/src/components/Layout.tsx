@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 import Wrapper, { WrapperVariant } from "./Wrapper";
 
-const NavBar = dynamic(() => import("../components/NavBar"), { ssr: false });
+const NavBar = dynamic(() => import("./NavBar"), { ssr: false });
 
 interface LayoutProps {
   children: any;
