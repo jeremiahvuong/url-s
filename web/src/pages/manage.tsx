@@ -2,6 +2,7 @@ import { Button, Flex, Link, Spacer, useDisclosure } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
+import { useState } from "react";
 import EditModal from "../components/EditModal";
 import { Layout } from "../components/Layout";
 import { DOMAIN_NAME } from "../constants";
@@ -12,6 +13,12 @@ const Manage: NextPage = () => {
   const [{ data, fetching, error }] = useMyLinksQuery();
   const [, deleteData] = useDeleteMutation();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [idNumber, setIdNumber] = useState(0);
+
+  const openModal = (id: number) => {
+    onOpen;
+    setIdNumber(id);
+  };
 
   if (!fetching && !data) {
     return (
@@ -30,7 +37,12 @@ const Manage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <EditModal onClose={onClose} onOpen={onOpen} isOpen={isOpen} />
+      <EditModal
+        onClose={onClose}
+        onOpen={onOpen}
+        isOpen={isOpen}
+        idNumber={idNumber}
+      />
 
       <Layout>
         {!data && fetching ? (
@@ -44,7 +56,13 @@ const Manage: NextPage = () => {
                 <Link href={p.link}>{p.link}</Link>
                 <Spacer />
                 <Link href={DOMAIN_NAME + p.hash}>{DOMAIN_NAME + p.hash}</Link>
-                <Button ml={2} onClick={onOpen}>
+                <Button
+                  ml={2}
+                  onClick={() => {
+                    onOpen();
+                    setIdNumber(p.id);
+                  }}
+                >
                   ✏️
                 </Button>
                 <Button

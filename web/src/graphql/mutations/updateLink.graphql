@@ -1,0 +1,5 @@
+mutation UpdateLink($link: String!, $id: Float!, $hash: String!) {
+  updateLink(link: $link, id: $id, hash: $hash) {
+    ...RegularLinkResponse
+  }
+}

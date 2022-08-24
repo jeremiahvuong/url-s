@@ -158,6 +158,15 @@ export type ShortenMutationVariables = Exact<{
 
 export type ShortenMutation = { __typename?: 'Mutation', shorten: { __typename?: 'LinkResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null } };
 
+export type UpdateLinkMutationVariables = Exact<{
+  link: Scalars['String'];
+  id: Scalars['Float'];
+  hash: Scalars['String'];
+}>;
+
+
+export type UpdateLinkMutation = { __typename?: 'Mutation', updateLink: { __typename?: 'LinkResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null } };
+
 export type LinkByHashQueryVariables = Exact<{
   hash: Scalars['String'];
 }>;
@@ -276,6 +285,17 @@ export const ShortenDocument = gql`
 
 export function useShortenMutation() {
   return Urql.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument);
+};
+export const UpdateLinkDocument = gql`
+    mutation UpdateLink($link: String!, $id: Float!, $hash: String!) {
+  updateLink(link: $link, id: $id, hash: $hash) {
+    ...RegularLinkResponse
+  }
+}
+    ${RegularLinkResponseFragmentDoc}`;
+
+export function useUpdateLinkMutation() {
+  return Urql.useMutation<UpdateLinkMutation, UpdateLinkMutationVariables>(UpdateLinkDocument);
 };
 export const LinkByHashDocument = gql`
     query LinkByHash($hash: String!) {

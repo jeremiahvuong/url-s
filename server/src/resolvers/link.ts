@@ -92,6 +92,12 @@ export class LinkResolver {
     @Ctx() { req }: MyContext
   ): Promise<LinkResponse> {
     let temp;
+    const findLink = await Link.findOne({ where: { id } });
+
+    // If user is not author
+    if (findLink?.creatorId !== req.session.userId) {
+      throw new Error("not authorized");
+    }
 
     // replace https to http
     if (link.includes("https://") && !link.includes("http://")) {
