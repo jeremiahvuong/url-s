@@ -1,5 +1,5 @@
 mutation Shorten($link: String!) {
   shorten(link: $link) {
-    ...RegularLink
+    ...RegularLinkResponse
   }
 }

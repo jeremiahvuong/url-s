@@ -1,5 +1,0 @@
-query Link($hash: String!) {
-  link(hash: $hash) {
-    ...RegularLink
-  }
-}

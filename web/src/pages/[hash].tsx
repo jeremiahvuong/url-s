@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { withUrqlClient } from "next-urql";
-import { useLinkQuery } from "../generated/graphql";
+import { useLinkByHashQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import router from "next/router";
 import Head from "next/head";
@@ -16,14 +16,16 @@ interface Props {
 }
 
 const Hash: NextPage<Props> = ({ input }) => {
-  const [{ data, fetching }] = useLinkQuery({ variables: { hash: input } });
+  const [{ data, fetching }] = useLinkByHashQuery({
+    variables: { hash: input },
+  });
 
-  if (!data?.link && !fetching) {
+  if (!data?.linkByHash && !fetching) {
     router.replace("/");
   }
 
-  if (data?.link) {
-    router.replace(data.link.link);
+  if (data?.linkByHash) {
+    router.replace(data.linkByHash.link);
   }
 
   return (

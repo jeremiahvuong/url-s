@@ -62,13 +62,15 @@ const Index: NextPage = () => {
               (data) =>
                 data && (
                   <Flex>
-                    <Link href={data?.shorten.link}>{data?.shorten.link}</Link>
+                    <Link href={data.shorten.link?.link}>
+                      {data.shorten.link?.link}
+                    </Link>
                     <Spacer />
                     <Link
                       color={"blue"}
-                      href={DOMAIN_NAME + data?.shorten.hash}
+                      href={DOMAIN_NAME + data.shorten.link?.hash}
                     >
-                      {DOMAIN_NAME + data?.shorten.hash}
+                      {DOMAIN_NAME + data.shorten.link?.hash}
                     </Link>
                   </Flex>
                 )

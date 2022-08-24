@@ -1,0 +1,5 @@
+query LinkById($id: Float!) {
+  linkById(id: $id) {
+    ...RegularLink
+  }
+}

@@ -93,7 +93,8 @@ export const createUrqlClient = (ssrExchange: any) => ({
               { query: MyLinksDocument },
               _result,
               (result, query) => {
-                query?.myLinks?.push(result.shorten);
+                // @ts-ignore typeing compat error?
+                query.myLinks?.push(result.shorten.link);
                 return query;
               }
             );

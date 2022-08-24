@@ -31,13 +31,20 @@ export type Link = {
   updatedAt: Scalars['String'];
 };
 
+export type LinkResponse = {
+  __typename?: 'LinkResponse';
+  errors?: Maybe<Array<FieldError>>;
+  link?: Maybe<Link>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   delete: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
-  shorten: Link;
+  shorten: LinkResponse;
+  updateLink: LinkResponse;
 };
 
 
@@ -61,16 +68,29 @@ export type MutationShortenArgs = {
   link: Scalars['String'];
 };
 
+
+export type MutationUpdateLinkArgs = {
+  hash: Scalars['String'];
+  id: Scalars['Float'];
+  link: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  link?: Maybe<Link>;
+  linkByHash?: Maybe<Link>;
+  linkById?: Maybe<Link>;
   me?: Maybe<User>;
   myLinks?: Maybe<Array<Link>>;
 };
 
 
-export type QueryLinkArgs = {
+export type QueryLinkByHashArgs = {
   hash: Scalars['String'];
+};
+
+
+export type QueryLinkByIdArgs = {
+  id: Scalars['Float'];
 };
 
 export type User = {
@@ -97,6 +117,8 @@ export type UsernamePasswordInput = {
 export type RegularErrorFragment = { __typename?: 'FieldError', field: string, message: string };
 
 export type RegularLinkFragment = { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string };
+
+export type RegularLinkResponseFragment = { __typename?: 'LinkResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string };
 
@@ -134,14 +156,30 @@ export type ShortenMutationVariables = Exact<{
 }>;
 
 
-export type ShortenMutation = { __typename?: 'Mutation', shorten: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } };
+export type ShortenMutation = { __typename?: 'Mutation', shorten: { __typename?: 'LinkResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null } };
 
-export type LinkQueryVariables = Exact<{
+export type UpdateLinkMutationVariables = Exact<{
+  link: Scalars['String'];
+  id: Scalars['Float'];
   hash: Scalars['String'];
 }>;
 
 
-export type LinkQuery = { __typename?: 'Query', link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null };
+export type UpdateLinkMutation = { __typename?: 'Mutation', updateLink: { __typename?: 'LinkResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, link?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null } };
+
+export type LinkByHashQueryVariables = Exact<{
+  hash: Scalars['String'];
+}>;
+
+
+export type LinkByHashQuery = { __typename?: 'Query', linkByHash?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null };
+
+export type LinkByIdQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type LinkByIdQuery = { __typename?: 'Query', linkById?: { __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -153,6 +191,12 @@ export type MyLinksQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyLinksQuery = { __typename?: 'Query', myLinks?: Array<{ __typename?: 'Link', id: number, link: string, hash: string, creatorId: number, createdAt: string, updatedAt: string }> | null };
 
+export const RegularErrorFragmentDoc = gql`
+    fragment RegularError on FieldError {
+  field
+  message
+}
+    `;
 export const RegularLinkFragmentDoc = gql`
     fragment RegularLink on Link {
   id
@@ -163,12 +207,17 @@ export const RegularLinkFragmentDoc = gql`
   updatedAt
 }
     `;
-export const RegularErrorFragmentDoc = gql`
-    fragment RegularError on FieldError {
-  field
-  message
+export const RegularLinkResponseFragmentDoc = gql`
+    fragment RegularLinkResponse on LinkResponse {
+  errors {
+    ...RegularError
+  }
+  link {
+    ...RegularLink
+  }
 }
-    `;
+    ${RegularErrorFragmentDoc}
+${RegularLinkFragmentDoc}`;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -229,24 +278,46 @@ export function useRegisterMutation() {
 export const ShortenDocument = gql`
     mutation Shorten($link: String!) {
   shorten(link: $link) {
-    ...RegularLink
+    ...RegularLinkResponse
   }
 }
-    ${RegularLinkFragmentDoc}`;
+    ${RegularLinkResponseFragmentDoc}`;
 
 export function useShortenMutation() {
   return Urql.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument);
 };
-export const LinkDocument = gql`
-    query Link($hash: String!) {
-  link(hash: $hash) {
+export const UpdateLinkDocument = gql`
+    mutation UpdateLink($link: String!, $id: Float!, $hash: String!) {
+  updateLink(link: $link, id: $id, hash: $hash) {
+    ...RegularLinkResponse
+  }
+}
+    ${RegularLinkResponseFragmentDoc}`;
+
+export function useUpdateLinkMutation() {
+  return Urql.useMutation<UpdateLinkMutation, UpdateLinkMutationVariables>(UpdateLinkDocument);
+};
+export const LinkByHashDocument = gql`
+    query LinkByHash($hash: String!) {
+  linkByHash(hash: $hash) {
     ...RegularLink
   }
 }
     ${RegularLinkFragmentDoc}`;
 
-export function useLinkQuery(options: Omit<Urql.UseQueryArgs<LinkQueryVariables>, 'query'>) {
-  return Urql.useQuery<LinkQuery>({ query: LinkDocument, ...options });
+export function useLinkByHashQuery(options: Omit<Urql.UseQueryArgs<LinkByHashQueryVariables>, 'query'>) {
+  return Urql.useQuery<LinkByHashQuery>({ query: LinkByHashDocument, ...options });
+};
+export const LinkByIdDocument = gql`
+    query LinkById($id: Float!) {
+  linkById(id: $id) {
+    ...RegularLink
+  }
+}
+    ${RegularLinkFragmentDoc}`;
+
+export function useLinkByIdQuery(options: Omit<Urql.UseQueryArgs<LinkByIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<LinkByIdQuery>({ query: LinkByIdDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {
