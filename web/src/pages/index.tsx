@@ -1,32 +1,47 @@
+import {
+  Box,
+  Button,
+  Flex,
+  Link,
+  Spacer,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import type { NextPage } from "next";
+import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
-import { DOMAIN_NAME } from "../constants";
-import { ShortenMutation, useShortenMutation } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { Layout } from "../components/Layout";
-import { Box, Flex, Link, Spacer } from "@chakra-ui/react";
+import { useState } from "react";
+import EditModal from "../components/EditModal";
 import InputField from "../components/InputField";
+import { Layout } from "../components/Layout";
+import { DOMAIN_NAME } from "../constants";
+import {
+  useDeleteMutation,
+  useMyLinksQuery,
+  useShortenMutation,
+} from "../generated/graphql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
-const Index: NextPage = () => {
-  const [{ data }, shortenLink] = useShortenMutation();
-  const [links, setLinks] = useState<ShortenMutation[]>([]);
+const Manage: NextPage = () => {
+  const [{ data, fetching, error }] = useMyLinksQuery();
+  const [, deleteData] = useDeleteMutation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [idNumber, setIdNumber] = useState(0);
+  const [{ data: shortData }, shortenLink] = useShortenMutation();
 
-  const addLink = useRef((link: ShortenMutation) => {});
-
-  addLink.current = (link: ShortenMutation) => {
-    if (links.length > 4) {
-      links.pop();
-    }
-
-    setLinks((prevLinks) => [link, ...prevLinks]);
+  const openModal = (id: number) => {
+    onOpen;
+    setIdNumber(id);
   };
 
-  useEffect(() => {
-    addLink.current(data!);
-  }, [addLink, data]);
+  if (!fetching && !data) {
+    return (
+      <div>
+        <div>oops...</div>
+        <div>{error?.message}</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -35,16 +50,16 @@ const Index: NextPage = () => {
         <meta name="description" content="A URL shortening web-app." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <EditModal
+        onClose={onClose}
+        onOpen={onOpen}
+        isOpen={isOpen}
+        idNumber={idNumber}
+      />
+
       <Layout>
-        <Box mt={40}>
-          <Box>
-            <p>
-              Made with ❤️ by{" "}
-              <Link color="blue" href="https://github.com/jeremiahvuong">
-                jeremiah
-              </Link>
-            </p>
-          </Box>
+        <Box m={10}>
           <Formik
             initialValues={{ link: "" }}
             onSubmit={async (val) => {
@@ -53,33 +68,49 @@ const Index: NextPage = () => {
           >
             {({ handleSubmit, handleChange }) => (
               <Form onSubmit={handleSubmit}>
-                <InputField name="link" onChange={handleChange} label={""} />
+                <InputField
+                  name="link"
+                  onChange={handleChange}
+                  label={"Shorten Link"}
+                />
               </Form>
             )}
           </Formik>
-          <Box>
-            {links.map(
-              (data) =>
-                data && (
-                  <Flex>
-                    <Link href={data.shorten.link?.link}>
-                      {data.shorten.link?.link}
-                    </Link>
-                    <Spacer />
-                    <Link
-                      color={"blue"}
-                      href={DOMAIN_NAME + data.shorten.link?.hash}
-                    >
-                      {DOMAIN_NAME + data.shorten.link?.hash}
-                    </Link>
-                  </Flex>
-                )
-            )}
-          </Box>
         </Box>
+        {!data && fetching ? (
+          <p>loading...</p>
+        ) : (
+          data?.myLinks
+            ?.slice(0)
+            .reverse()
+            .map((p) => (
+              <Flex p={2} key={p.id}>
+                <Link href={p.link}>{p.link}</Link>
+                <Spacer />
+                <Link href={DOMAIN_NAME + p.hash}>{DOMAIN_NAME + p.hash}</Link>
+                <Button
+                  ml={2}
+                  onClick={() => {
+                    onOpen();
+                    setIdNumber(p.id);
+                  }}
+                >
+                  ✏️
+                </Button>
+                <Button
+                  ml={2}
+                  onClick={() => {
+                    deleteData({ id: p.id });
+                  }}
+                >
+                  🗑️
+                </Button>
+              </Flex>
+            ))
+        )}
       </Layout>
     </>
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Manage);

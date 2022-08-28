@@ -22,6 +22,7 @@ export class LinkResolver {
     @Ctx() { req }: MyContext
   ): Promise<LinkResponse> {
     let temp;
+
     if (link.length < 3) {
       return {
         errors: [

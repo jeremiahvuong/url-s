@@ -46,8 +46,8 @@ export const createUrqlClient = (ssrExchange: any) => ({
               () => ({ me: null })
             );
 
-            // re-route to homepage
-            Router.replace("/");
+            // re-route to login
+            Router.replace("/login");
           },
           login: (_result, args, cache, info) => {
             betterUpdateQuery<LoginMutation, MeQuery>(
@@ -93,7 +93,7 @@ export const createUrqlClient = (ssrExchange: any) => ({
               { query: MyLinksDocument },
               _result,
               (result, query) => {
-                // @ts-ignore typeing compat error?
+                // @ts-ignore typing compat error?
                 query.myLinks?.push(result.shorten.link);
                 return query;
               }

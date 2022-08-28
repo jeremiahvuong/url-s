@@ -31,7 +31,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     // user is logged in
     userState = (
       <Flex>
-        <NextLink href="/manage">
+        <NextLink href="/">
           <Link mr={2}>{meData.me.username}</Link>
         </NextLink>
         <Button
