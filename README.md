@@ -28,4 +28,5 @@ You must have all envs to start the server
 PORT=4000
 CORS_ORIGIN=http://localhost:3000
 DATABASE_URL=postgresql://<USERNAME>:<PASSWORD>@localhost:5432/<DB_NAME>
+SESSION_SECRET=<SESSION_SECRET>
 ```
